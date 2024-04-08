@@ -1,7 +1,9 @@
-#ifndef PHONEBOOK_HPP
-#define PHONEBOOK_HPP
+#pragma once
 
 #include "Contact.hpp"
+#include <iostream>
+#include <string>
+#include <stdlib.h>
 
 class Phonebook	{
 	private :
@@ -19,5 +21,3 @@ class Phonebook	{
 		int			DisplayIndex(std::string index);
 		void		Search(void);
 };
-
-#endif

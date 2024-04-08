@@ -1,5 +1,4 @@
 #include "Phonebook.hpp"
-#include <iostream>
 
 Phonebook::Phonebook(void){
 	this->index = 0;
@@ -39,7 +38,9 @@ void	Phonebook::Add(void)
 	std::string Sec;
 
 	if (this->index > 7)
-		std::cout << "Warning: overwriting info about " << this->Contacts[this->index % 8].GetFirstName() << std::endl;
+		std::cout << "\nWarning:\toverwriting info about contact n°" << this->index % 8 + 1 << ": \n\n" \
+		<< "\t" << this->Contacts[this->index % 8].GetFirstName() << " " \
+		<< this->Contacts[this->index % 8].GetLastName() << std::endl;
 	
 	std::cout << std::endl;
 
@@ -55,9 +56,13 @@ void	Phonebook::Add(void)
 	this->Contacts[this->index % 8].SetPhoneNum(PNum);
 	this->Contacts[this->index % 8].SetSecret(Sec);
 
-	std::cout << this->Contacts[this->index % 8].GetFirstName() << " " \
+	std::cout << std::endl << this->Contacts[this->index % 8].GetFirstName() << " " \
 	<< this->Contacts[this->index % 8].GetLastName() \
-	<< " successfully added to phonebook [" << this->index % 8 + 1 << "/8]" << std::endl;
+	<< " successfully added to MyAwesomePhonebook (";
+	if (this->index % 8 + 1 == 8)
+		std::cout << "full)" << std::endl;
+	else
+		std::cout << this->index % 8 + 1 << " out of 8 contacts)" << std::endl;
 	
 	this->index++;
 }
@@ -74,16 +79,13 @@ std::string	Phonebook::AddSpaces(int n)
 void	Phonebook::DisplayContact(int to_display, std::string word)
 {
 	std::cout << "|" << AddSpaces(10 - to_display);
-	for (int i = 0; word[i] && i < 9; i++)
+	for (int i = 0; word[i] && i < 10; i++)
 	{
-		std::cout << word[i];
+		if (to_display > 10 && i == 9)
+			std::cout << '.';
+		else
+			std::cout << word[i];
 	}
-	if (to_display > 10)
-		std::cout << '.';
-	else if (word[9])
-		std::cout << word[9];
-	else
-		std::cout << " ";
 }
 
 void	Phonebook::DisplayBook(void)
@@ -94,7 +96,7 @@ void	Phonebook::DisplayBook(void)
 	std::cout << "|     Index|First Name| Last Name|  Nickname|" << std::endl;
 	std::cout << "|----------|----------|----------|----------|" << std::endl;
 	
-	for (int i = 0; !Contacts[i].GetFirstName().empty() && i < 8; i++)
+	for (int i = 0; i < 8 && !Contacts[i].GetFirstName().empty(); i++)
 	{
 		std::cout << "|" << AddSpaces(9) << i + 1;
 		DisplayContact(Contacts[i].GetFirstName().size(), Contacts[i].GetFirstName());
@@ -112,15 +114,22 @@ int	Phonebook::DisplayIndex(std::string index)
 
 	if (!Contacts[index_int - 1].GetFirstName().empty())
 	{
-		std::cout << "Info about contact nº" << index << std::endl;
-		std::cout << "First Name: " << Contacts[index_int - 1].GetFirstName() << std::endl;
-		std::cout << "Last Name: " << Contacts[index_int - 1].GetLastName() << std::endl;
-		std::cout << "Nick: " << Contacts[index_int - 1].GetNick() << std::endl;
-		std::cout << "Secret: " << Contacts[index_int - 1].GetSecret() << std::endl;
+		std::cout << "Info about contact nº " << index << "\n\n";
+		std::cout << "First Name:\t" << Contacts[index_int - 1].GetFirstName() << std::endl;
+		std::cout << "Last Name:\t" << Contacts[index_int - 1].GetLastName() << std::endl;
+		std::cout << "Nick:\t\t" << Contacts[index_int - 1].GetNick() << std::endl;
+		std::cout << "Phone Num:\t" << Contacts[index_int - 1].GetPhoneNum() << std::endl;
+		std::cout << "Secret:\t\t" << Contacts[index_int - 1].GetSecret() << "\n\n";
 		return (1);
 	}
 	else
-		std::cout << "The PhoneBook only has " << this->index << " contacts.\n";
+	{
+		std::cout << "The PhoneBook only has " << this->index;
+		if (this->index == 1)
+			std::cout << " contact.\n";
+		else
+			std::cout << " contacts.\n";
+	}
 	return (0);
 }
 
@@ -130,19 +139,19 @@ void	Phonebook::Search(void)
 	int valid = 0;
 
 	if (Contacts[0].GetFirstName().empty())
-		std::cout << "No Contacts exist!\n";
+		std::cout << "\nNo Contacts exist!\n\n";
 	else
 	{
 		DisplayBook();
 		while (valid == 0)
 		{
-			std::cout << "\nQue contacto pretende ver?:	\t";
+			std::cout << "\nWhich contact:	\t";
 			std::getline(std::cin, index);
 			std::cout << std::endl;
 			if (index >= "1" && index <= "8" && index.size() == 1)
 				valid = DisplayIndex(index);
 			else
-				std::cout << "index inválido!\n";
+				std::cout << "Invalid index!\n";
 		}
 	}
 }
